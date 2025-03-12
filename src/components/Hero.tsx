@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { useInView } from "@/lib/animations";
 import { cn } from "@/lib/utils";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ExternalLink } from "lucide-react";
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -15,7 +15,7 @@ const Hero = () => {
       id="hero"
     >
       <div 
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-secondary/30 to-background"
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-muted/50 to-background"
         aria-hidden="true"
       ></div>
       
@@ -24,21 +24,21 @@ const Hero = () => {
       >
         <span 
           className={cn(
-            "px-4 py-1.5 text-xs font-medium tracking-wide uppercase bg-secondary text-foreground/70 rounded-full mb-8 opacity-0",
+            "px-4 py-1.5 text-xs font-semibold tracking-wide uppercase bg-muted text-secondary rounded-full mb-8 opacity-0",
             isInView && "animate-scale-in"
           )}
         >
-          Introducing
+          Willkommen bei WZW
         </span>
         
         <h1 
           className={cn(
-            "text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight mb-6 text-balance opacity-0",
+            "text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 text-balance opacity-0",
             isInView && "animate-fade-in"
           )}
         >
-          <span className="block">Design that</span>
-          <span className="block">inspires creation</span>
+          <span className="block text-primary">Innovative</span>
+          <span className="block wzw-gradient-text">Lösungen</span>
         </h1>
         
         <p 
@@ -47,8 +47,8 @@ const Hero = () => {
             isInView && "animate-fade-in"
           )}
         >
-          We create beautiful, functional solutions with precision and care, 
-          embracing simplicity and focusing on what truly matters.
+          Wir schaffen massgeschneiderte Lösungen mit Präzision und Sorgfalt, 
+          und fokussieren uns auf das Wesentliche für Ihren Erfolg.
         </p>
         
         <div 
@@ -59,15 +59,16 @@ const Hero = () => {
         >
           <a 
             href="#products" 
-            className="px-6 py-3 bg-foreground text-background rounded-full hover:bg-foreground/90 transition-colors duration-300"
+            className="px-6 py-3 bg-primary text-white rounded-full hover:bg-secondary transition-colors duration-300 flex items-center justify-center gap-2"
           >
-            Explore Products
+            Produkte entdecken
+            <ExternalLink className="w-4 h-4" />
           </a>
           <a 
             href="#features" 
-            className="px-6 py-3 bg-transparent border border-foreground/20 text-foreground rounded-full hover:bg-secondary transition-colors duration-300"
+            className="px-6 py-3 bg-transparent border border-primary/20 text-foreground rounded-full hover:bg-muted transition-colors duration-300"
           >
-            Learn More
+            Mehr erfahren
           </a>
         </div>
       </div>
@@ -75,10 +76,10 @@ const Hero = () => {
       <div className="absolute bottom-12 left-0 right-0 flex justify-center animate-pulse-slow">
         <a 
           href="#about" 
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
-          aria-label="Scroll down"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-white wzw-shadow hover:shadow-lg transition-shadow duration-300"
+          aria-label="Nach unten scrollen"
         >
-          <ArrowDown className="w-5 h-5" />
+          <ArrowDown className="w-5 h-5 text-primary" />
         </a>
       </div>
     </section>

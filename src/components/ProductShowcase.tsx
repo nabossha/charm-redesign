@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { useInView } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 type Product = {
   id: number;
@@ -14,24 +15,24 @@ type Product = {
 const products: Product[] = [
   {
     id: 1,
-    title: "Premium Product One",
-    description: "An expertly crafted solution designed with meticulous attention to detail and uncompromising quality.",
+    title: "Premium Lösung",
+    description: "Eine fachmännisch gestaltete Lösung, die mit akribischer Liebe zum Detail und kompromissloser Qualität entwickelt wurde.",
     imageSrc: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=1600&q=80",
-    features: ["Exceptional detail", "Precision engineering", "Intuitive design"],
+    features: ["Aussergewöhnliches Detail", "Präzisions-Engineering", "Intuitives Design"],
   },
   {
     id: 2,
-    title: "Elegant Product Two",
-    description: "A harmonious blend of form and function, creating an experience that's both beautiful and purposeful.",
+    title: "Elegante Innovation",
+    description: "Eine harmonische Mischung aus Form und Funktion, die ein Erlebnis schafft, das sowohl schön als auch zweckmässig ist.",
     imageSrc: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=1600&q=80",
-    features: ["Seamless integration", "Refined aesthetics", "Enduring quality"],
+    features: ["Nahtlose Integration", "Raffinierte Ästhetik", "Dauerhafte Qualität"],
   },
   {
     id: 3,
-    title: "Innovative Product Three",
-    description: "Breaking new ground with thoughtful innovation that solves real problems in elegant ways.",
+    title: "Innovative Technologie",
+    description: "Wir brechen mit durchdachten Innovationen neue Wege, die echte Probleme auf elegante Weise lösen.",
     imageSrc: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80",
-    features: ["Revolutionary approach", "Forward-thinking", "Sustainable design"],
+    features: ["Revolutionärer Ansatz", "Zukunftsorientiert", "Nachhaltiges Design"],
   },
 ];
 
@@ -50,19 +51,19 @@ const ProductShowcase = () => {
         <div className="text-center mb-20">
           <span 
             className={cn(
-              "inline-block px-4 py-1.5 text-xs font-medium tracking-wide uppercase bg-secondary text-foreground/70 rounded-full mb-6 opacity-0",
+              "inline-block px-4 py-1.5 text-xs font-semibold tracking-wide uppercase bg-muted text-secondary rounded-full mb-6 opacity-0",
               isInView && "animate-scale-in"
             )}
           >
-            Our Products
+            Unsere Produkte
           </span>
           <h2 
             className={cn(
-              "text-4xl md:text-5xl font-medium mb-6 opacity-0",
+              "text-4xl md:text-5xl font-bold mb-6 opacity-0 text-primary",
               isInView && "animate-fade-in"
             )}
           >
-            Designed with purpose
+            Mit Präzision entwickelt
           </h2>
           <p 
             className={cn(
@@ -70,8 +71,8 @@ const ProductShowcase = () => {
               isInView && "animate-fade-in"
             )}
           >
-            Each product we create is meticulously crafted to deliver outstanding 
-            performance while maintaining an elegant, timeless design.
+            Jedes von uns geschaffene Produkt ist sorgfältig gefertigt, um aussergewöhnliche 
+            Leistung zu liefern und gleichzeitig ein elegantes, zeitloses Design beizubehalten.
           </p>
         </div>
 
@@ -86,7 +87,7 @@ const ProductShowcase = () => {
               <div
                 key={product.id}
                 className={cn(
-                  "rounded-2xl overflow-hidden transition-all duration-1000 ease-apple",
+                  "rounded-2xl overflow-hidden transition-all duration-1000 ease-apple wzw-shadow",
                   activeProduct === product.id
                     ? "opacity-100 transform-none"
                     : "opacity-0 absolute"
@@ -102,7 +103,7 @@ const ProductShowcase = () => {
                     className="w-full h-[400px] object-cover object-center"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-60"></div>
                 </div>
               </div>
             ))}
@@ -122,10 +123,10 @@ const ProductShowcase = () => {
                   className={cn(
                     "w-3 h-3 rounded-full transition-all duration-300",
                     activeProduct === product.id
-                      ? "bg-foreground scale-125"
+                      ? "bg-secondary scale-125"
                       : "bg-foreground/30"
                   )}
-                  aria-label={`View ${product.title}`}
+                  aria-label={`${product.title} anzeigen`}
                 />
               ))}
             </div>
@@ -138,7 +139,7 @@ const ProductShowcase = () => {
                   activeProduct === product.id ? "opacity-100" : "opacity-0 hidden"
                 )}
               >
-                <h3 className="text-3xl font-medium">{product.title}</h3>
+                <h3 className="text-3xl font-bold text-primary">{product.title}</h3>
                 <p className="text-foreground/70 text-lg">
                   {product.description}
                 </p>
@@ -148,7 +149,9 @@ const ProductShowcase = () => {
                       key={idx}
                       className="flex items-center gap-3"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-foreground"></span>
+                      <span className="w-5 h-5 flex items-center justify-center rounded-full bg-muted text-secondary">
+                        <ArrowRight className="w-3 h-3" />
+                      </span>
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -156,9 +159,10 @@ const ProductShowcase = () => {
                 <div className="pt-6">
                   <a
                     href="#"
-                    className="px-6 py-3 inline-flex items-center bg-foreground text-background rounded-full hover:bg-foreground/90 transition-colors duration-300"
+                    className="px-6 py-3 inline-flex items-center bg-primary text-white rounded-full hover:bg-secondary transition-colors duration-300 gap-2"
                   >
-                    Explore {product.title}
+                    {product.title} entdecken
+                    <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
               </div>

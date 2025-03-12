@@ -2,37 +2,44 @@
 import { useRef } from "react";
 import { useInView } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { Check, Clock, Shield, Zap, BarChart, Users } from "lucide-react";
 
 const features = [
   {
-    title: "Intuitive Design",
-    description: "Our solutions are crafted with the user in mind, ensuring an effortless and natural experience.",
+    title: "Intuitive Benutzererfahrung",
+    description: "Unsere Lösungen sind benutzerfreundlich gestaltet und garantieren ein natürliches Erlebnis.",
     delay: "animation-delay-100",
+    icon: <Users className="w-5 h-5" />,
   },
   {
-    title: "Meticulous Craftsmanship",
-    description: "Every detail is carefully considered and refined to create products of exceptional quality.",
+    title: "Präzise Handwerkskunst",
+    description: "Jedes Detail wird sorgfältig überlegt und verfeinert, um Produkte von aussergewöhnlicher Qualität zu schaffen.",
     delay: "animation-delay-200",
+    icon: <Check className="w-5 h-5" />,
   },
   {
-    title: "Purposeful Innovation",
-    description: "We embrace new technologies and approaches that genuinely enhance the user experience.",
+    title: "Zielgerichtete Innovation",
+    description: "Wir setzen auf neue Technologien und Ansätze, die das Benutzererlebnis tatsächlich verbessern.",
     delay: "animation-delay-300",
+    icon: <Zap className="w-5 h-5" />,
   },
   {
-    title: "Timeless Aesthetic",
-    description: "Our designs transcend trends, focusing on clarity and elegance that endures.",
+    title: "Zeitlose Ästhetik",
+    description: "Unser Design überdauert Trends und konzentriert sich auf Klarheit und dauerhafte Eleganz.",
     delay: "animation-delay-400",
+    icon: <Clock className="w-5 h-5" />,
   },
   {
-    title: "Seamless Integration",
-    description: "Our products work harmoniously together, creating a cohesive and unified experience.",
+    title: "Nahtlose Integration",
+    description: "Unsere Produkte arbeiten harmonisch zusammen und schaffen ein kohärentes und einheitliches Erlebnis.",
     delay: "animation-delay-500",
+    icon: <BarChart className="w-5 h-5" />,
   },
   {
-    title: "Sustainable Approach",
-    description: "We design with longevity in mind, creating products that last and minimize environmental impact.",
+    title: "Nachhaltiger Ansatz",
+    description: "Wir gestalten mit Langlebigkeit im Blick und schaffen Produkte, die lange halten und die Umweltbelastung minimieren.",
     delay: "animation-delay-600",
+    icon: <Shield className="w-5 h-5" />,
   },
 ];
 
@@ -44,25 +51,25 @@ const Features = () => {
     <section
       id="features"
       ref={featuresRef}
-      className="py-24 md:py-32 px-6 relative overflow-hidden bg-secondary/50"
+      className="py-24 md:py-32 px-6 relative overflow-hidden bg-muted/50"
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
           <span 
             className={cn(
-              "inline-block px-4 py-1.5 text-xs font-medium tracking-wide uppercase bg-white text-foreground/70 rounded-full mb-6 opacity-0",
+              "inline-block px-4 py-1.5 text-xs font-semibold tracking-wide uppercase bg-white text-secondary rounded-full mb-6 opacity-0",
               isInView && "animate-scale-in"
             )}
           >
-            Our Approach
+            Unser Ansatz
           </span>
           <h2 
             className={cn(
-              "text-4xl md:text-5xl font-medium mb-6 opacity-0",
+              "text-4xl md:text-5xl font-bold mb-6 opacity-0 text-primary",
               isInView && "animate-fade-in"
             )}
           >
-            Features that matter
+            Leistungen die zählen
           </h2>
           <p 
             className={cn(
@@ -70,8 +77,8 @@ const Features = () => {
               isInView && "animate-fade-in"
             )}
           >
-            We focus on the essential, eliminating the unnecessary to create 
-            experiences that are both beautiful and functional.
+            Wir konzentrieren uns auf das Wesentliche und eliminieren das Unnötige, 
+            um Erlebnisse zu schaffen, die sowohl schön als auch funktional sind.
           </p>
         </div>
 
@@ -80,15 +87,15 @@ const Features = () => {
             <div
               key={index}
               className={cn(
-                "bg-white p-8 rounded-2xl shadow-sm hover-lift opacity-0",
+                "bg-white p-8 rounded-2xl wzw-shadow hover-lift opacity-0",
                 feature.delay,
                 isInView && "animate-fade-in"
               )}
             >
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-secondary mb-6">
-                <span className="text-xl font-medium">{index + 1}</span>
+              <div className="w-12 h-12 flex items-center justify-center rounded-full wzw-gradient text-white mb-6">
+                {feature.icon}
               </div>
-              <h3 className="text-xl font-medium mb-3">{feature.title}</h3>
+              <h3 className="text-xl font-bold mb-3 text-primary">{feature.title}</h3>
               <p className="text-foreground/70">{feature.description}</p>
             </div>
           ))}
