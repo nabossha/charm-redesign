@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { useInView } from "@/lib/animations";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ExternalLink } from "lucide-react";
+import { ArrowDown, ExternalLink, Mail } from "lucide-react";
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -65,10 +65,11 @@ const Hero = () => {
             <ExternalLink className="w-4 h-4" />
           </a>
           <a 
-            href="#features" 
-            className="px-6 py-3 bg-transparent border border-primary/20 text-foreground rounded-full hover:bg-muted transition-colors duration-300"
+            href="#contact-form" 
+            className="px-6 py-3 bg-transparent border border-primary/20 text-foreground rounded-full hover:bg-muted transition-colors duration-300 flex items-center justify-center gap-2"
           >
-            Mehr erfahren
+            Kontakt aufnehmen
+            <Mail className="w-4 h-4" />
           </a>
         </div>
       </div>

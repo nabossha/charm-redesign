@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ProductShowcase from "@/components/ProductShowcase";
 import Features from "@/components/Features";
+import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -82,6 +83,7 @@ const Index = () => {
         
         <ProductShowcase />
         <Features />
+        <ContactForm />
       </main>
       <Footer />
     </div>
