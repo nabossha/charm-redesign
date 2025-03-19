@@ -52,7 +52,7 @@ const Index = () => {
                   We create beauty through simplicity
                 </h2>
                 <p className="text-foreground/70 text-lg mb-8">
-                  At WZW, we believe that the best designs are those that 
+                  At XYZ, we believe that the best designs are those that 
                   seamlessly blend form and function, creating experiences that 
                   feel intuitive and natural. Our approach focuses on reducing 
                   complexity and celebrating the essential.

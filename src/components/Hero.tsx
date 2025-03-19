@@ -28,7 +28,7 @@ const Hero = () => {
             isInView && "animate-scale-in"
           )}
         >
-          Willkommen bei WZW
+          Willkommen bei XYZ
         </span>
         
         <h1 

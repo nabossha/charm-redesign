@@ -92,17 +92,17 @@ const Footer = () => {
               <li className="text-white/70 flex items-start gap-3">
                 <MapPin className="w-5 h-5 mt-0.5 text-secondary" />
                 <div>
-                  <span className="block">WZW AG</span>
+                  <span className="block">XYZ AG</span>
                   <span className="block">Zürich, Schweiz</span>
                 </div>
               </li>
               <li>
                 <a 
-                  href="mailto:info@wzw.ch"
+                  href="mailto:info@xyz.ch"
                   className="text-white/70 hover:text-white transition-colors duration-300 flex items-center gap-3"
                 >
                   <Mail className="w-5 h-5 text-secondary" />
-                  info@wzw.ch
+                  info@xyz.ch
                 </a>
               </li>
               <li>
@@ -122,7 +122,7 @@ const Footer = () => {
           "mt-16 pt-8 border-t border-white/20 text-center text-white/50 text-sm opacity-0 animation-delay-400",
           isInView && "animate-fade-in"
         )}>
-          <p>© {new Date().getFullYear()} WZW AG. Alle Rechte vorbehalten.</p>
+          <p>© {new Date().getFullYear()} XYZ AG. Alle Rechte vorbehalten.</p>
         </div>
       </div>
     </footer>
