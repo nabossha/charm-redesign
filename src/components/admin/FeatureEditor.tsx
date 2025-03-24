@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchFeatures, updateFeature, createFeature, deleteFeature } from "@/services/contentService";
 import { Feature } from "@/types/content";
@@ -36,7 +36,7 @@ const FeatureEditor = () => {
   });
   
   const form = useForm<Partial<Feature>>({
-    defaultValues: selectedFeature || {
+    defaultValues: {
       title: "",
       description: "",
       icon: "Users",
@@ -44,11 +44,11 @@ const FeatureEditor = () => {
   });
   
   // Update form values when selected feature changes
-  useState(() => {
+  useEffect(() => {
     if (selectedFeature) {
       form.reset(selectedFeature);
       setSelectedIcon(selectedFeature.icon);
-    } else {
+    } else if (!isCreating) {
       form.reset({
         title: "",
         description: "",
@@ -56,7 +56,7 @@ const FeatureEditor = () => {
       });
       setSelectedIcon("Users");
     }
-  });
+  }, [selectedFeature, form, isCreating]);
   
   const updateMutation = useMutation({
     mutationFn: updateFeature,
@@ -162,14 +162,22 @@ const FeatureEditor = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col space-y-4">
-              <Dialog open={isCreating} onOpenChange={setIsCreating}>
-                <DialogTrigger asChild>
-                  <Button className="w-full">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Neues Feature
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  setIsCreating(true);
+                  setSelectedFeature(null);
+                  form.reset({
+                    title: "",
+                    description: "",
+                    icon: "Users",
+                  });
+                  setSelectedIcon("Users");
+                }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Neues Feature
+              </Button>
               
               <div className="flex flex-col space-y-2 mt-4">
                 {features.map((feature) => (
@@ -179,9 +187,9 @@ const FeatureEditor = () => {
                       className="justify-start flex-1 text-left"
                       onClick={() => {
                         setSelectedFeature(feature);
+                        setIsCreating(false);
                         form.reset(feature);
                         setSelectedIcon(feature.icon);
-                        setIsCreating(false);
                       }}
                     >
                       {feature.title}
@@ -292,7 +300,11 @@ const FeatureEditor = () => {
                         } else {
                           setSelectedFeature(null);
                         }
-                        form.reset();
+                        form.reset({
+                          title: "",
+                          description: "",
+                          icon: "Users",
+                        });
                         setSelectedIcon("Users");
                       }}
                     >
@@ -327,97 +339,6 @@ const FeatureEditor = () => {
           </CardContent>
         </Card>
       </div>
-      
-      {/* Dialog for creating new feature */}
-      {isCreating && (
-        <Dialog open={isCreating} onOpenChange={setIsCreating}>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Neues Feature erstellen</DialogTitle>
-              <DialogDescription>
-                Erstellen Sie ein neues Feature für Ihre Website.
-              </DialogDescription>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Titel</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Beschreibung</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={4} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormItem>
-                  <FormLabel>Icon</FormLabel>
-                  <FormDescription>
-                    Wählen Sie ein Icon für dieses Feature
-                  </FormDescription>
-                  <div className="grid grid-cols-3 gap-2 mt-2">
-                    {AVAILABLE_ICONS.map((icon) => (
-                      <Button
-                        key={icon.name}
-                        type="button"
-                        variant={selectedIcon === icon.name ? "default" : "outline"}
-                        className="h-16 flex flex-col gap-2"
-                        onClick={() => setSelectedIcon(icon.name)}
-                      >
-                        <div className="flex items-center justify-center">
-                          {icon.icon}
-                        </div>
-                        <span className="text-xs">{icon.name}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </FormItem>
-              </form>
-            </Form>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setIsCreating(false);
-                  form.reset();
-                  setSelectedIcon("Users");
-                }}
-              >
-                Abbrechen
-              </Button>
-              <Button 
-                onClick={form.handleSubmit(onSubmit)}
-                disabled={createMutation.isPending}
-              >
-                {createMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Erstellen...
-                  </>
-                ) : (
-                  "Erstellen"
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 };
