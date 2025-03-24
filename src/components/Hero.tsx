@@ -3,10 +3,19 @@ import { useRef } from "react";
 import { useInView } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { ArrowDown, ExternalLink, Mail } from "lucide-react";
+import { PageContent } from "@/types/content";
 
-const Hero = () => {
+interface HeroProps {
+  content?: PageContent;
+}
+
+const Hero = ({ content }: HeroProps) => {
   const heroRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(heroRef, { threshold: 0.1 });
+
+  // Default content if not provided from database
+  const title = content?.title || "Innovative Lösungen";
+  const description = content?.description || "Wir schaffen massgeschneiderte Lösungen mit Präzision und Sorgfalt, und fokussieren uns auf das Wesentliche für Ihren Erfolg.";
 
   return (
     <section 
@@ -28,7 +37,7 @@ const Hero = () => {
             isInView && "animate-scale-in"
           )}
         >
-          Willkommen bei XYZ
+          Willkommen bei WZW
         </span>
         
         <h1 
@@ -37,8 +46,8 @@ const Hero = () => {
             isInView && "animate-fade-in"
           )}
         >
-          <span className="block text-primary">Innovative</span>
-          <span className="block wzw-gradient-text">Lösungen</span>
+          <span className="block text-primary">{title.split(' ')[0]}</span>
+          <span className="block wzw-gradient-text">{title.split(' ').slice(1).join(' ')}</span>
         </h1>
         
         <p 
@@ -47,8 +56,7 @@ const Hero = () => {
             isInView && "animate-fade-in"
           )}
         >
-          Wir schaffen massgeschneiderte Lösungen mit Präzision und Sorgfalt, 
-          und fokussieren uns auf das Wesentliche für Ihren Erfolg.
+          {description}
         </p>
         
         <div 

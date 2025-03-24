@@ -1,13 +1,32 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ProductShowcase from "@/components/ProductShowcase";
 import Features from "@/components/Features";
 import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
+import { fetchPageContent, fetchProducts, fetchFeatures } from "@/services/contentService";
+import { PageContent, Product, Feature } from "@/types/content";
 
 const Index = () => {
+  // Fetch content data
+  const { data: pageContent = {} } = useQuery<Record<string, PageContent>>({
+    queryKey: ['pageContent'],
+    queryFn: fetchPageContent,
+  });
+
+  const { data: products = [] } = useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: fetchProducts,
+  });
+
+  const { data: features = [] } = useQuery<Feature[]>({
+    queryKey: ['features'],
+    queryFn: fetchFeatures,
+  });
+
   useEffect(() => {
     // Smooth scroll initialization
     const handleLinkClick = (e: MouseEvent) => {
@@ -39,7 +58,7 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <main>
-        <Hero />
+        <Hero content={pageContent['hero']} />
         
         <section id="about" className="py-24 md:py-32 px-6 relative">
           <div className="max-w-7xl mx-auto">
@@ -49,13 +68,10 @@ const Index = () => {
                   About Us
                 </span>
                 <h2 className="text-4xl md:text-5xl font-medium mb-6">
-                  We create beauty through simplicity
+                  {pageContent['about']?.title || "We create beauty through simplicity"}
                 </h2>
                 <p className="text-foreground/70 text-lg mb-8">
-                  At XYZ, we believe that the best designs are those that 
-                  seamlessly blend form and function, creating experiences that 
-                  feel intuitive and natural. Our approach focuses on reducing 
-                  complexity and celebrating the essential.
+                  {pageContent['about']?.description || "At XYZ, we believe that the best designs are those that seamlessly blend form and function, creating experiences that feel intuitive and natural. Our approach focuses on reducing complexity and celebrating the essential."}
                 </p>
                 <p className="text-foreground/70 text-lg">
                   Every product we create is the result of meticulous attention 
@@ -68,7 +84,7 @@ const Index = () => {
               <div className="relative">
                 <div className="rounded-2xl overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1600&q=80" 
+                    src={pageContent['about']?.image_url || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1600&q=80"} 
                     alt="Design Process" 
                     className="w-full h-auto object-cover"
                     loading="lazy"
@@ -81,8 +97,16 @@ const Index = () => {
           </div>
         </section>
         
-        <ProductShowcase />
-        <Features />
+        <ProductShowcase 
+          sectionContent={pageContent['products']} 
+          products={products} 
+        />
+        
+        <Features 
+          sectionContent={pageContent['features']} 
+          features={features} 
+        />
+        
         <ContactForm />
       </main>
       <Footer />

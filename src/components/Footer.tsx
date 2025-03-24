@@ -1,128 +1,53 @@
 
-import { useRef } from "react";
-import { useInView } from "@/lib/animations";
-import { cn } from "@/lib/utils";
-import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
-  const footerRef = useRef<HTMLElement>(null);
-  const isInView = useInView(footerRef, { threshold: 0.1 });
-
   return (
-    <footer
-      id="contact"
-      ref={footerRef}
-      className="py-16 md:py-24 px-6 bg-primary text-white"
-    >
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <div className={cn(
-            "opacity-0",
-            isInView && "animate-fade-in"
-          )}>
-            <h3 className="text-2xl font-bold mb-6 flex items-center">
-              <div className="relative h-8 w-20 mr-2">
-                <svg viewBox="0 0 120 48" className="h-full w-full">
-                  <path 
-                    d="M0 10 L20 10 L15 30 L30 10 L50 10 L40 40 L30 40 L35 25 L20 40 L10 40 L0 10Z" 
-                    fill="white"
-                  />
-                  <path 
-                    d="M55 10 L105 10 L100 20 L80 20 L75 30 L95 30 L90 40 L50 40 L55 30 L75 30 L80 20 L60 20 L55 10Z" 
-                    fill="hsl(var(--secondary))"
-                  />
-                  <path 
-                    d="M110 10 L120 10 L110 40 L100 40 L110 10Z" 
-                    fill="white"
-                  />
-                </svg>
-              </div>
-            </h3>
-            <p className="text-white/70 mb-6">
-              Wir schaffen durchdachte Lösungen mit Präzision und Sorgfalt, 
-              konzentrieren uns auf Einfachheit und auf das, was wirklich wichtig ist.
+    <footer className="bg-muted py-16 border-t border-muted">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold">Über uns</h4>
+            <p className="text-foreground/70">
+              Wir entwickeln innovative Lösungen mit Präzision und Sorgfalt,
+              und fokussieren uns auf das Wesentliche für Ihren Erfolg.
             </p>
           </div>
-
-          <div className={cn(
-            "opacity-0 animation-delay-100",
-            isInView && "animate-fade-in"
-          )}>
-            <h4 className="text-sm font-bold uppercase tracking-wider mb-6">Navigation</h4>
-            <ul className="space-y-4">
-              {["Über uns", "Produkte", "Dienstleistungen", "Kontakt"].map((item, index) => (
-                <li key={item}>
-                  <a 
-                    href={`#${["about", "products", "features", "contact"][index]}`}
-                    className="text-white/70 hover:text-white transition-colors duration-300 flex items-center gap-2"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold">Kontakt</h4>
+            <p className="text-foreground/70">
+              Musterstrasse 123<br />
+              8000 Zürich<br />
+              Schweiz
+            </p>
+            <p className="text-foreground/70">
+              <a href="mailto:info@example.com" className="hover:text-primary">info@example.com</a><br />
+              <a href="tel:+41441234567" className="hover:text-primary">+41 44 123 45 67</a>
+            </p>
           </div>
-
-          <div className={cn(
-            "opacity-0 animation-delay-200",
-            isInView && "animate-fade-in"
-          )}>
-            <h4 className="text-sm font-bold uppercase tracking-wider mb-6">Rechtliches</h4>
-            <ul className="space-y-4">
-              {["Datenschutzerklärung", "AGB", "Impressum", "Cookie-Richtlinie"].map((item) => (
-                <li key={item}>
-                  <a 
-                    href="#"
-                    className="text-white/70 hover:text-white transition-colors duration-300"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className={cn(
-            "opacity-0 animation-delay-300",
-            isInView && "animate-fade-in"
-          )}>
-            <h4 className="text-sm font-bold uppercase tracking-wider mb-6">Kontakt</h4>
-            <ul className="space-y-4">
-              <li className="text-white/70 flex items-start gap-3">
-                <MapPin className="w-5 h-5 mt-0.5 text-secondary" />
-                <div>
-                  <span className="block">XYZ AG</span>
-                  <span className="block">Zürich, Schweiz</span>
-                </div>
+          
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold">Links</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="#products" className="text-foreground/70 hover:text-primary">Produkte</a>
               </li>
               <li>
-                <a 
-                  href="mailto:info@xyz.ch"
-                  className="text-white/70 hover:text-white transition-colors duration-300 flex items-center gap-3"
-                >
-                  <Mail className="w-5 h-5 text-secondary" />
-                  info@xyz.ch
-                </a>
+                <a href="#features" className="text-foreground/70 hover:text-primary">Features</a>
               </li>
               <li>
-                <a 
-                  href="tel:+41123456789"
-                  className="text-white/70 hover:text-white transition-colors duration-300 flex items-center gap-3"
-                >
-                  <Phone className="w-5 h-5 text-secondary" />
-                  +41 12 345 67 89
-                </a>
+                <a href="#contact-form" className="text-foreground/70 hover:text-primary">Kontakt</a>
+              </li>
+              <li>
+                <Link to="/admin" className="text-foreground/70 hover:text-primary">Admin</Link>
               </li>
             </ul>
           </div>
         </div>
-
-        <div className={cn(
-          "mt-16 pt-8 border-t border-white/20 text-center text-white/50 text-sm opacity-0 animation-delay-400",
-          isInView && "animate-fade-in"
-        )}>
-          <p>© {new Date().getFullYear()} XYZ AG. Alle Rechte vorbehalten.</p>
+        
+        <div className="border-t border-muted-foreground/20 mt-12 pt-8 text-center text-foreground/50 text-sm">
+          <p>© {new Date().getFullYear()} WZW. Alle Rechte vorbehalten.</p>
         </div>
       </div>
     </footer>
