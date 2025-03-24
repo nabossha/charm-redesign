@@ -42,9 +42,9 @@ const SortableFeatureItem = ({ feature, isSelected, onSelect, onDelete }: {
   };
   
   return (
-    <div ref={setNodeRef} style={style} className="flex items-center gap-2 mb-2">
+    <div ref={setNodeRef} style={style} className="flex items-center gap-2 mb-2 bg-white border rounded-md p-2 shadow-sm">
       <div 
-        className="cursor-grab hover:text-primary touch-none" 
+        className="cursor-grab hover:text-primary touch-none flex items-center justify-center p-1 bg-muted/40 rounded" 
         {...attributes} 
         {...listeners}
       >
@@ -299,7 +299,13 @@ const FeatureEditor = () => {
               </Button>
               
               <div className="mt-4">
-                <p className="text-sm text-muted-foreground mb-2">Drag & Drop zum Sortieren</p>
+                <div className="bg-muted/20 p-3 rounded-md mb-4 border border-dashed border-muted-foreground/30">
+                  <p className="text-sm font-medium mb-1">Sortieren per Drag & Drop</p>
+                  <p className="text-xs text-muted-foreground">
+                    Ziehen Sie die Features mit dem <GripVertical className="h-3 w-3 inline-block mx-1" /> Symbol, um die Reihenfolge anzupassen.
+                  </p>
+                </div>
+                
                 <DndContext 
                   sensors={sensors}
                   collisionDetection={closestCenter}
