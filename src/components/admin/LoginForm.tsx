@@ -87,11 +87,6 @@ const LoginForm = () => {
         )}
       </Button>
       
-      <div className="text-center text-sm text-muted-foreground pt-2">
-        <p>Für den Demozugang verwenden Sie:</p>
-        <p>Benutzername: <strong>admin</strong></p>
-        <p>Passwort: <strong>admin123</strong></p>
-      </div>
     </form>
   );
 };
