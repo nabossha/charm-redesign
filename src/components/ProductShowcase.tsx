@@ -1,5 +1,5 @@
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useInView } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
@@ -11,9 +11,16 @@ interface ProductShowcaseProps {
 }
 
 const ProductShowcase = ({ sectionContent, products = [] }: ProductShowcaseProps) => {
-  const [activeProduct, setActiveProduct] = useState<string | number>(products[0]?.id || 1);
+  const [activeProduct, setActiveProduct] = useState<string | number>(products.length > 0 ? products[0]?.id : "");
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { threshold: 0.1 });
+
+  useEffect(() => {
+    // Update active product when products change
+    if (products.length > 0 && !activeProduct) {
+      setActiveProduct(products[0]?.id);
+    }
+  }, [products, activeProduct]);
 
   // Default content if not provided from database
   const title = sectionContent?.title || "Mit Präzision entwickelt";
@@ -122,7 +129,7 @@ const ProductShowcase = ({ sectionContent, products = [] }: ProductShowcaseProps
                     {product.description}
                   </p>
                   <ul className="space-y-3 pt-4">
-                    {product.features.map((feature, idx) => (
+                    {product.features?.map((feature, idx) => (
                       <li
                         key={idx}
                         className="flex items-center gap-3"
