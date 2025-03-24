@@ -1,4 +1,3 @@
-
 export interface PageContent {
   id: string;
   section_id: string;
@@ -14,7 +13,8 @@ export interface Product {
   title: string;
   description: string;
   image_url: string | null;
-  features: string[];
+  features: string[] | null;
+  position: number;
   created_at: string;
   updated_at: string;
 }
@@ -24,6 +24,7 @@ export interface Feature {
   title: string;
   description: string;
   icon: string;
+  position: number;
   created_at: string;
   updated_at: string;
 }

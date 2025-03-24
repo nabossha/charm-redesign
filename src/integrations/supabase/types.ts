@@ -36,6 +36,7 @@ export type Database = {
           description: string
           icon: string
           id: string
+          position: number | null
           title: string
           updated_at: string
         }
@@ -44,6 +45,7 @@ export type Database = {
           description: string
           icon: string
           id?: string
+          position?: number | null
           title: string
           updated_at?: string
         }
@@ -52,6 +54,7 @@ export type Database = {
           description?: string
           icon?: string
           id?: string
+          position?: number | null
           title?: string
           updated_at?: string
         }
@@ -94,6 +97,7 @@ export type Database = {
           features: string[] | null
           id: string
           image_url: string | null
+          position: number | null
           title: string
           updated_at: string
         }
@@ -103,6 +107,7 @@ export type Database = {
           features?: string[] | null
           id?: string
           image_url?: string | null
+          position?: number | null
           title: string
           updated_at?: string
         }
@@ -112,6 +117,7 @@ export type Database = {
           features?: string[] | null
           id?: string
           image_url?: string | null
+          position?: number | null
           title?: string
           updated_at?: string
         }
