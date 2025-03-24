@@ -24,11 +24,23 @@ const Navbar = () => {
     };
   }, [mobileMenuOpen]);
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (!element) return;
+    
+    window.scrollTo({
+      top: element.offsetTop,
+      behavior: 'smooth'
+    });
+    
+    setMobileMenuOpen(false);
+  };
+
   const navItems = [
-    { name: "Über uns", href: "#about" },
-    { name: "Produkte", href: "#products" },
-    { name: "Dienstleistungen", href: "#features" },
-    { name: "Kontakt", href: "#contact" },
+    { name: "Über uns", href: "about" },
+    { name: "Produkte", href: "products" },
+    { name: "Dienstleistungen", href: "features" },
+    { name: "Kontakt", href: "contact-form" },
   ];
 
   return (
@@ -64,20 +76,20 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
-            <a
+            <button
               key={item.name}
-              href={item.href}
+              onClick={() => scrollToSection(item.href)}
               className="text-sm font-medium text-foreground/80 hover:text-secondary transition-colors duration-300"
             >
               {item.name}
-            </a>
+            </button>
           ))}
-          <a 
-            href="#contact" 
+          <button 
+            onClick={() => scrollToSection('contact-form')}
             className="text-sm font-medium px-5 py-2 rounded-full bg-primary text-white hover:bg-secondary transition-colors duration-300"
           >
             Anfrage
-          </a>
+          </button>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -102,23 +114,21 @@ const Navbar = () => {
         >
           <nav className="flex flex-col items-center gap-8 p-8">
             {navItems.map((item) => (
-              <a
+              <button
                 key={item.name}
-                href={item.href}
+                onClick={() => scrollToSection(item.href)}
                 className="text-xl font-medium hover:text-secondary transition-colors duration-300 flex items-center gap-2"
-                onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
                 <ChevronRight className="w-5 h-5 text-secondary" />
-              </a>
+              </button>
             ))}
-            <a 
-              href="#contact" 
+            <button 
+              onClick={() => scrollToSection('contact-form')}
               className="mt-4 text-xl font-medium px-6 py-3 rounded-full bg-primary text-white hover:bg-secondary transition-colors duration-300"
-              onClick={() => setMobileMenuOpen(false)}
             >
               Anfrage
-            </a>
+            </button>
           </nav>
         </div>
       </div>

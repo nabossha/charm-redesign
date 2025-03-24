@@ -27,33 +27,6 @@ const Index = () => {
     queryFn: fetchFeatures,
   });
 
-  useEffect(() => {
-    // Smooth scroll initialization
-    const handleLinkClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const link = target.closest('a');
-      if (!link) return;
-      
-      const href = link.getAttribute('href');
-      if (!href || !href.startsWith('#')) return;
-      
-      e.preventDefault();
-      const element = document.querySelector(href);
-      if (!element) return;
-      
-      window.scrollTo({
-        top: element.getBoundingClientRect().top + window.scrollY,
-        behavior: 'smooth'
-      });
-    };
-
-    document.addEventListener('click', handleLinkClick);
-    
-    return () => {
-      document.removeEventListener('click', handleLinkClick);
-    };
-  }, []);
-
   return (
     <div className="min-h-screen">
       <Navbar />
