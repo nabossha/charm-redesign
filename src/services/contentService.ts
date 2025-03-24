@@ -22,7 +22,8 @@ export const fetchPageContent = async (): Promise<Record<string, PageContent>> =
 export const fetchProducts = async (): Promise<Product[]> => {
   const { data, error } = await supabase
     .from('products')
-    .select('*');
+    .select('*')
+    .order('position', { ascending: true });
   
   if (error) {
     console.error('Error fetching products:', error);
@@ -35,7 +36,8 @@ export const fetchProducts = async (): Promise<Product[]> => {
 export const fetchFeatures = async (): Promise<Feature[]> => {
   const { data, error } = await supabase
     .from('features')
-    .select('*');
+    .select('*')
+    .order('position', { ascending: true });
   
   if (error) {
     console.error('Error fetching features:', error);
@@ -79,9 +81,21 @@ export const updateProduct = async (product: Partial<Product> & { id: string }):
 };
 
 export const createProduct = async (product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product> => {
+  // Get the maximum position value
+  const { data: maxPositionData } = await supabase
+    .from('products')
+    .select('position')
+    .order('position', { ascending: false })
+    .limit(1);
+  
+  const maxPosition = maxPositionData && maxPositionData.length > 0 ? maxPositionData[0].position || 0 : 0;
+  
   const { data, error } = await supabase
     .from('products')
-    .insert(product)
+    .insert({
+      ...product,
+      position: maxPosition + 1
+    })
     .select()
     .single();
   
@@ -122,9 +136,21 @@ export const updateFeature = async (feature: Partial<Feature> & { id: string }):
 };
 
 export const createFeature = async (feature: Omit<Feature, 'id' | 'created_at' | 'updated_at'>): Promise<Feature> => {
+  // Get the maximum position value
+  const { data: maxPositionData } = await supabase
+    .from('features')
+    .select('position')
+    .order('position', { ascending: false })
+    .limit(1);
+  
+  const maxPosition = maxPositionData && maxPositionData.length > 0 ? maxPositionData[0].position || 0 : 0;
+  
   const { data, error } = await supabase
     .from('features')
-    .insert(feature)
+    .insert({
+      ...feature,
+      position: maxPosition + 1
+    })
     .select()
     .single();
   
@@ -145,5 +171,35 @@ export const deleteFeature = async (id: string): Promise<void> => {
   if (error) {
     console.error('Error deleting feature:', error);
     throw error;
+  }
+};
+
+export const reorderFeatures = async (orderedIds: string[]): Promise<void> => {
+  // Update each feature with its new position
+  for (let i = 0; i < orderedIds.length; i++) {
+    const { error } = await supabase
+      .from('features')
+      .update({ position: i + 1 })
+      .eq('id', orderedIds[i]);
+    
+    if (error) {
+      console.error(`Error updating position for feature ${orderedIds[i]}:`, error);
+      throw error;
+    }
+  }
+};
+
+export const reorderProducts = async (orderedIds: string[]): Promise<void> => {
+  // Update each product with its new position
+  for (let i = 0; i < orderedIds.length; i++) {
+    const { error } = await supabase
+      .from('products')
+      .update({ position: i + 1 })
+      .eq('id', orderedIds[i]);
+    
+    if (error) {
+      console.error(`Error updating position for product ${orderedIds[i]}:`, error);
+      throw error;
+    }
   }
 };

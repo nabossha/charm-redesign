@@ -1,7 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchProducts, updateProduct, createProduct, deleteProduct } from "@/services/contentService";
+import { fetchProducts, updateProduct, createProduct, deleteProduct, reorderProducts } from "@/services/contentService";
 import { Product } from "@/types/content";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,74 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Loader2, Save, Plus, Trash, Edit, X } from "lucide-react";
+import { Loader2, Save, Plus, Trash, Edit, X, GripVertical } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
+
+// Import React DND library
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+// Sortable Product Item Component
+const SortableProductItem = ({ product, isSelected, onSelect, onDelete }: { 
+  product: Product; 
+  isSelected: boolean; 
+  onSelect: () => void;
+  onDelete: () => void;
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: product.id });
+  
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+  
+  return (
+    <div ref={setNodeRef} style={style} className="flex items-center gap-2 mb-2">
+      <div 
+        className="cursor-grab hover:text-primary touch-none" 
+        {...attributes} 
+        {...listeners}
+      >
+        <GripVertical className="h-4 w-4" />
+      </div>
+      
+      <Button
+        variant={isSelected ? "default" : "outline"}
+        className="justify-start flex-1 text-left"
+        onClick={onSelect}
+      >
+        {product.title}
+      </Button>
+      
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="ghost" size="icon" className="ml-2">
+            <Trash className="h-4 w-4 text-destructive" />
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Produkt löschen</AlertDialogTitle>
+            <AlertDialogDescription>
+              Möchten Sie dieses Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Löschen
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+};
 
 const ProductEditor = () => {
   const { toast } = useToast();
@@ -21,11 +86,29 @@ const ProductEditor = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [features, setFeatures] = useState<string[]>([]);
   const [newFeature, setNewFeature] = useState("");
+  const [productList, setProductList] = useState<Product[]>([]);
+  
+  // Set up DND sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
   
   const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
+  
+  // Update local state when products data changes
+  useEffect(() => {
+    setProductList(products);
+  }, [products]);
   
   const form = useForm<Partial<Product>>({
     defaultValues: selectedProduct || {
@@ -37,7 +120,7 @@ const ProductEditor = () => {
   });
   
   // Update form values when selected product changes
-  useState(() => {
+  useEffect(() => {
     if (selectedProduct) {
       form.reset(selectedProduct);
       setFeatures(selectedProduct.features || []);
@@ -49,7 +132,7 @@ const ProductEditor = () => {
       });
       setFeatures([]);
     }
-  });
+  }, [selectedProduct, form]);
   
   const updateMutation = useMutation({
     mutationFn: updateProduct,
@@ -117,6 +200,27 @@ const ProductEditor = () => {
     },
   });
   
+  const reorderMutation = useMutation({
+    mutationFn: reorderProducts,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast({
+        title: "Reihenfolge aktualisiert",
+        description: "Die Reihenfolge der Produkte wurde erfolgreich aktualisiert.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Fehler",
+        description: "Die Reihenfolge konnte nicht aktualisiert werden.",
+        variant: "destructive",
+      });
+      console.error("Error reordering products:", error);
+      // Revert to original order
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+  
   const onSubmit = async (data: Partial<Product>) => {
     const productData = {
       ...data,
@@ -148,6 +252,22 @@ const ProductEditor = () => {
     setFeatures(features.filter((_, i) => i !== index));
   };
   
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (over && active.id !== over.id) {
+      const oldIndex = productList.findIndex((item) => item.id === active.id);
+      const newIndex = productList.findIndex((item) => item.id === over.id);
+      
+      const newProductList = arrayMove(productList, oldIndex, newIndex);
+      setProductList(newProductList);
+      
+      // Save new order to database
+      const orderedIds = newProductList.map(item => item.id);
+      reorderMutation.mutate(orderedIds);
+    }
+  };
+  
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
@@ -175,48 +295,30 @@ const ProductEditor = () => {
                 </DialogTrigger>
               </Dialog>
               
-              <div className="flex flex-col space-y-2 mt-4">
-                {products.map((product) => (
-                  <div key={product.id} className="flex items-center justify-between">
-                    <Button
-                      variant={selectedProduct?.id === product.id ? "default" : "outline"}
-                      className="justify-start flex-1 text-left"
-                      onClick={() => {
-                        setSelectedProduct(product);
-                        form.reset(product);
-                        setFeatures(product.features || []);
-                        setIsCreating(false);
-                      }}
-                    >
-                      {product.title}
-                    </Button>
-                    
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="ml-2">
-                          <Trash className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Produkt löschen</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Möchten Sie dieses Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteProduct(product.id)}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          >
-                            Löschen
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                ))}
+              <div className="mt-4">
+                <p className="text-sm text-muted-foreground mb-2">Drag & Drop zum Sortieren</p>
+                <DndContext 
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext items={productList.map(item => item.id)} strategy={verticalListSortingStrategy}>
+                    {productList.map((product) => (
+                      <SortableProductItem
+                        key={product.id}
+                        product={product}
+                        isSelected={selectedProduct?.id === product.id}
+                        onSelect={() => {
+                          setSelectedProduct(product);
+                          form.reset(product);
+                          setFeatures(product.features || []);
+                          setIsCreating(false);
+                        }}
+                        onDelete={() => handleDeleteProduct(product.id)}
+                      />
+                    ))}
+                  </SortableContext>
+                </DndContext>
               </div>
             </div>
           </CardContent>
