@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
@@ -9,26 +8,27 @@ import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 import { fetchPageContent, fetchProducts, fetchFeatures } from "@/services/contentService";
 import { PageContent, Product, Feature } from "@/types/content";
-
 const Index = () => {
   // Fetch content data
-  const { data: pageContent = {} } = useQuery<Record<string, PageContent>>({
+  const {
+    data: pageContent = {}
+  } = useQuery<Record<string, PageContent>>({
     queryKey: ['pageContent'],
-    queryFn: fetchPageContent,
+    queryFn: fetchPageContent
   });
-
-  const { data: products = [] } = useQuery<Product[]>({
+  const {
+    data: products = []
+  } = useQuery<Product[]>({
     queryKey: ['products'],
-    queryFn: fetchProducts,
+    queryFn: fetchProducts
   });
-
-  const { data: features = [] } = useQuery<Feature[]>({
+  const {
+    data: features = []
+  } = useQuery<Feature[]>({
     queryKey: ['features'],
-    queryFn: fetchFeatures,
+    queryFn: fetchFeatures
   });
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navbar />
       <main>
         <Hero content={pageContent['hero']} />
@@ -43,7 +43,7 @@ const Index = () => {
                 <h2 className="text-4xl md:text-5xl font-medium mb-6">
                   {pageContent['about']?.title || "We create beauty through simplicity"}
                 </h2>
-                <p className="text-foreground/70 text-lg mb-8">
+                <p className="text-foreground/70 text-lg mb-8 font-bold">
                   {pageContent['about']?.description || "At XYZ, we believe that the best designs are those that seamlessly blend form and function, creating experiences that feel intuitive and natural. Our approach focuses on reducing complexity and celebrating the essential."}
                 </p>
                 <p className="text-foreground/70 text-lg">
@@ -56,12 +56,7 @@ const Index = () => {
               
               <div className="relative">
                 <div className="rounded-2xl overflow-hidden">
-                  <img 
-                    src={pageContent['about']?.image_url || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1600&q=80"} 
-                    alt="Design Process" 
-                    className="w-full h-auto object-cover"
-                    loading="lazy"
-                  />
+                  <img src={pageContent['about']?.image_url || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1600&q=80"} alt="Design Process" className="w-full h-auto object-cover" loading="lazy" />
                 </div>
                 <div className="absolute -bottom-8 -left-8 w-64 h-64 bg-secondary rounded-2xl -z-10"></div>
                 <div className="absolute -top-8 -right-8 w-32 h-32 bg-white shadow-sm rounded-2xl -z-10"></div>
@@ -70,21 +65,13 @@ const Index = () => {
           </div>
         </section>
         
-        <ProductShowcase 
-          sectionContent={pageContent['products']} 
-          products={products} 
-        />
+        <ProductShowcase sectionContent={pageContent['products']} products={products} />
         
-        <Features 
-          sectionContent={pageContent['features']} 
-          features={features} 
-        />
+        <Features sectionContent={pageContent['features']} features={features} />
         
         <ContactForm />
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
